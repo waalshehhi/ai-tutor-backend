@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tutor - AI Learning Assistant</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #1e3a8a;
+      --bg: #f1f5f9;
+      --white: #ffffff;
+      --gray: #64748b;
+      --radius: 12px;
+    }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg);
+      color: var(--gray);
+      padding: 1rem;
+    }
+    .container {
+      max-width: 640px;
+      margin: 2rem auto;
+      background-color: var(--white);
+      border-radius: var(--radius);
+      padding: 2rem;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.06);
+    }
+    .logo {
+      text-align: center;
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 1rem;
+    }
+    .subtitle {
+      text-align: center;
+      font-size: 1rem;
+      margin-bottom: 2rem;
+    }
+    label {
+      display: block;
+      margin: 0.5rem 0 0.2rem;
+      font-weight: 600;
+    }
+    select, textarea, input[type=text] {
+      width: 100%;
+      padding: 0.75rem;
+      border-radius: var(--radius);
+      border: 1px solid #cbd5e1;
+      margin-bottom: 1rem;
+    }
+    button {
+      background-color: var(--primary);
+      color: var(--white);
+      border: none;
+      padding: 0.75rem 1.5rem;
+      border-radius: var(--radius);
+      cursor: pointer;
+      font-size: 1rem;
+      width: 100%;
+    }
+    button:hover {
+      background-color: #1c2f73;
+    }
+    .response-box {
+      margin-top: 1.5rem;
+      padding: 1rem;
+      background: #e0f2fe;
+      border-radius: var(--radius);
+    }
+    @media screen and (max-width: 600px) {
+      .container {
+        padding: 1.2rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="logo">Tutor</div>
+    <div class="subtitle">Ask anything from KG1 to College with AI</div>
+    
+    <label for="language">Language</label>
+    <select id="language">
+      <option>English</option>
+      <option>Arabic</option>
+      <option>French</option>
+      <option>Spanish</option>
+    </select>
+
+    <label for="level">Level</label>
+    <select id="level">
+      <option>KG1</option>
+      <option>KG2</option>
+      <option>Grade 1</option>
+      <option>Grade 2</option>
+      <option>...up to Grade 12</option>
+      <option>University - Year 1</option>
+      <option>University - Year 2</option>
+      <option>University - Year 3</option>
+      <option>University - Year 4</option>
+    </select>
+
+    <label for="subject">Subject</label>
+    <select id="subject">
+      <option>Mathematics</option>
+      <option>Physics</option>
+      <option>Chemistry</option>
+      <option>Biology</option>
+      <option>History</option>
+      <option>Geography</option>
+      <option>English</option>
+      <option>Computer Science</option>
+      <option>Economics</option>
+      <option>Business</option>
+      <option>Engineering</option>
+      <option>Medicine</option>
+    </select>
+
+    <label for="topic">Topic</label>
+    <input type="text" id="topic" placeholder="e.g. Newton's Laws">
+
+    <label for="question">Question</label>
+    <textarea id="question" rows="3" placeholder="Type your question here..."></textarea>
+
+    <button onclick="askTutor()">Ask Tutor</button>
+
+    <div class="response-box" id="responseBox" style="display: none;"></div>
+  </div>
+
+  <script>
+    async function askTutor() {
+      const language = document.getElementById('language').value;
+      const level = document.getElementById('level').value;
+      const subject = document.getElementById('subject').value;
+      const topic = document.getElementById('topic').value;
+      const question = document.getElementById('question').value;
+
+      const response = await fetch('http://127.0.0.1:8000/ask', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ language, level, subject, topic, question })
+      });
+
+      const data = await response.json();
+      const responseBox = document.getElementById('responseBox');
+      responseBox.style.display = 'block';
+      responseBox.innerText = data.answer || data.error || 'No response';
+    }
+  </script>
+</body>
+</html>
